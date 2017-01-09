@@ -7,9 +7,9 @@ class App(events.CEvent):
         self._running = True
         self._display_surf = None
         self.size = self.weight, self.height = 1280, 720
- 
     def on_init(self):
         pygame.init()
+        pygame.display.set_caption("My Window")
         self._display_surf = pygame.display.set_mode(self.size, pygame.HWSURFACE | pygame.DOUBLEBUF)
         self._running = True
         self._image_surf = pygame.image.load("tex/glider.jpg").convert()
