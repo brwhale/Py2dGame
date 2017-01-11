@@ -1,7 +1,27 @@
 import pygame
 from pygame.locals import *
- 
+
 class CEvent:
+    upkey = 273
+    downkey = 274
+    rightkey = 275
+    leftkey = 276
+    up = False
+    down = False
+    right = False
+    left = False
+    def getInputMove(self):
+        x = 0
+        y = 0
+        if CEvent.up:
+            y += 1
+        if CEvent.down:
+            y -= 1
+        if CEvent.right:
+            x += 1
+        if CEvent.left:
+            x -= 1
+        return (x, y)
     def __init__(self):
         pass
     def on_input_focus(self):
@@ -9,9 +29,23 @@ class CEvent:
     def on_input_blur(self):
         pass
     def on_key_down(self, event):
-        print(event.key)
+        if event.key == CEvent.upkey:
+            CEvent.up = True
+        elif event.key == CEvent.downkey:
+            CEvent.down = True
+        elif event.key == CEvent.rightkey:
+            CEvent.right = True
+        elif event.key == CEvent.leftkey:
+            CEvent.left = True
     def on_key_up(self, event):
-        print(event.key)
+        if event.key == CEvent.upkey:
+            CEvent.up = False
+        elif event.key == CEvent.downkey:
+            CEvent.down = False
+        elif event.key == CEvent.rightkey:
+            CEvent.right = False
+        elif event.key == CEvent.leftkey:
+            CEvent.left = False
     def on_mouse_focus(self):
         pass
     def on_mouse_blur(self):
