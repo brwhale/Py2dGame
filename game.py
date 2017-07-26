@@ -21,7 +21,7 @@ class App(events.CEvent):
         pygame.display.set_caption("snek 2d 0.1")
         self.display_surface = pygame.display.set_mode(self.size, pygame.HWSURFACE | pygame.DOUBLEBUF)
         self._running = True
-        self.player = player.Player(50, 60)
+        self.player = player.Player(self, 0, 0)
     def on_loop(self):
         """game logic here"""
         self.player.move(self.getInputMove())
