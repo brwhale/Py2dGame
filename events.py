@@ -14,13 +14,13 @@ class CEvent:
         x = 0
         y = 0
         if CEvent.up:
-            y += 6.1
+            y += 1
         if CEvent.down:
-            y -= 0
+            y -= 1
         if CEvent.right:
-            x += .1
+            x += 1
         if CEvent.left:
-            x -= .1
+            x -= 1
         return (x, y)
     def __init__(self):
         pass

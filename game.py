@@ -5,6 +5,7 @@ import pygame
 from pygame.locals import *
 import events
 import player
+import gameObject
 
 class App(events.CEvent):
     """main class for game"""
@@ -21,14 +22,25 @@ class App(events.CEvent):
         pygame.display.set_caption("snek 2d 0.1")
         self.display_surface = pygame.display.set_mode(self.size, pygame.HWSURFACE | pygame.DOUBLEBUF)
         self._running = True
-        self.player = player.Player(self, 0, 0)
+        self.player = player.Player(self, 100, 0)
+        self.objects = [gameObject.Object(self, 400, 0),
+            gameObject.Object(self, 500, 100, 100,20),
+            gameObject.Object(self, 800, 0),
+            gameObject.Object(self, 1200, 10),
+            gameObject.Object(self, 700, 500, 400, 40),
+            gameObject.Object(self, 0, 0, 4, 720),
+            gameObject.Object(self, 1260, 0, 4, 700),
+            gameObject.Object(self, 0, 710, 1200, 4),
+            gameObject.Object(self, 0, 0, 1200, 4)]
     def on_loop(self):
         """game logic here"""
         self.player.move(self.getInputMove())
     def on_render(self):
         """render stuff here"""
-        self.display_surface.fill((0,0,0))
-        self.player.render(self.display_surface)
+        self.display_surface.fill((30,20,10))        
+        for obj in self.objects:
+            obj.render()
+        self.player.render()
         pygame.display.flip()
     def on_cleanup(self):
         """quittin time"""
