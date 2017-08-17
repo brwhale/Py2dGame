@@ -13,7 +13,7 @@ class Player:
         self.sprite = pygame.image.load("tex/glider.jpg").convert()
         self.sprite = pygame.transform.scale(self.sprite, self.size)
         self.onGround = False
-        self.renderMode = pygame.BLEND_ADD
+        self.renderMode = 0
     def move(self, pos):
         # transform input move vector into character move vector
         x, y = pos[0] * self.runSpeed, 0 if pos[1] < 0 else pos[1] * self.jumpSpeed
