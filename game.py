@@ -25,6 +25,11 @@ class App(events.CEvent):
         self.player = player.Player(self, 100, 0)
         self.objects = [gameObject.Object(self, 400, 0),
             gameObject.Object(self, 500, 100, 100,20),
+            gameObject.Object(self, 600, 120, 100,20),
+            gameObject.Object(self, 700, 140, 100,20),
+            gameObject.Object(self, 800, 160, 100,20),
+            gameObject.Object(self, 900, 180, 100,20),
+            gameObject.Object(self, 1000, 200, 100,20),
             gameObject.Object(self, 800, 0),
             gameObject.Object(self, 1200, 10),
             gameObject.Object(self, 700, 500, 400, 40),
