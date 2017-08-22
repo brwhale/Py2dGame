@@ -6,10 +6,16 @@ class CEvent:
     downkey = 274
     rightkey = 275
     leftkey = 276
+    wkey = 119
+    akey = 97
+    skey = 115
+    dkey = 100
+    rkey = 114
     up = False
     down = False
     right = False
     left = False
+    r = False
     def getInputMove(self):
         x = 0
         y = 0
@@ -22,30 +28,26 @@ class CEvent:
         if CEvent.left:
             x -= 1
         return (x, y)
-    def __init__(self):
-        pass
+    def __init__(self, appRef):
+        self.appRef = appRef
     def on_input_focus(self):
         pass
     def on_input_blur(self):
         pass
-    def on_key_down(self, event):
-        if event.key == CEvent.upkey:
-            CEvent.up = True
-        elif event.key == CEvent.downkey:
-            CEvent.down = True
-        elif event.key == CEvent.rightkey:
-            CEvent.right = True
-        elif event.key == CEvent.leftkey:
-            CEvent.left = True
-    def on_key_up(self, event):
-        if event.key == CEvent.upkey:
-            CEvent.up = False
-        elif event.key == CEvent.downkey:
-            CEvent.down = False
-        elif event.key == CEvent.rightkey:
-            CEvent.right = False
-        elif event.key == CEvent.leftkey:
-            CEvent.left = False
+    def on_key_down_up(self, event, isdown):
+        if event.key == CEvent.upkey or event.key == CEvent.wkey:
+            CEvent.up = isdown
+        elif event.key == CEvent.downkey or event.key == CEvent.skey:
+            CEvent.down = isdown
+        elif event.key == CEvent.rightkey or event.key == CEvent.dkey:
+            CEvent.right = isdown
+        elif event.key == CEvent.leftkey or event.key == CEvent.akey:
+            CEvent.left = isdown
+        elif event.key == CEvent.rkey:
+            if isdown:
+                if not CEvent.r:
+                    self.appRef.reset()
+            CEvent.r = isdown
     def on_mouse_focus(self):
         pass
     def on_mouse_blur(self):
@@ -102,10 +104,10 @@ class CEvent:
             self.on_resize(event)
  
         elif event.type == KEYUP:
-            self.on_key_up(event)
+            self.on_key_down_up(event, False)
  
         elif event.type == KEYDOWN:
-            self.on_key_down(event)
+            self.on_key_down_up(event, True)
  
         elif event.type == MOUSEMOTION:
             self.on_mouse_move(event)
