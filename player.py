@@ -53,6 +53,20 @@ class Player:
                             self.onGround = True
         # update position taking everyhting into account
         self.position = newpos
+        # update screen offset
+        padding = 100
+        boundMinX = self.appRef.offset[0] + padding
+        boundMaxX = self.appRef.offset[0] + self.appRef.size[0] - padding - self.size[0]
+        boundMinY = self.appRef.offset[1] + padding
+        boundMaxY = self.appRef.offset[1] + self.appRef.size[1] - padding - self.size[1]
+        if (self.position[0] < boundMinX):
+            self.appRef.offset = self.appRef.offset[0] + (self.position[0] - boundMinX), self.appRef.offset[1]
+        if (self.position[1] < boundMinY):
+            self.appRef.offset = self.appRef.offset[0], self.appRef.offset[1] + (self.position[1] - boundMinY)
+        if (self.position[0] > boundMaxX):
+            self.appRef.offset = self.appRef.offset[0] + (self.position[0] - boundMaxX), self.appRef.offset[1]
+        if (self.position[1] > boundMaxY):
+            self.appRef.offset = self.appRef.offset[0], self.appRef.offset[1] + (self.position[1] - boundMaxY)
     def render(self):
         x, y = self.position
-        self.appRef.display_surface.blit(self.sprite, (x, (self.appRef.size[1] - self.size[1])-y), None, self.renderMode)
+        self.appRef.display_surface.blit(self.sprite, (x - self.appRef.offset[0], (self.appRef.size[1] - self.size[1])-(y - self.appRef.offset[1])), None, self.renderMode)

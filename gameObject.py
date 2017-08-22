@@ -12,4 +12,4 @@ class Object:
         self.sprite = pygame.transform.scale(self.sprite, self.size)
     def render(self):
         x, y = self.position
-        self.appRef.display_surface.blit(self.sprite, (x, (self.appRef.size[1] - self.size[1])-y))
+        self.appRef.display_surface.blit(self.sprite, (x - self.appRef.offset[0], (self.appRef.size[1] - self.size[1])-(y - self.appRef.offset[1])))

@@ -14,6 +14,7 @@ class App(events.CEvent):
         self._running = True
         self.display_surface = None
         self.size = self.weight, self.height = 1280, 720
+        self.offset = 0, 0
     def on_init(self):
         """game init"""
         # pylint: disable=E1101
