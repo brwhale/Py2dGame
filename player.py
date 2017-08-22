@@ -14,6 +14,16 @@ class Player:
         self.sprite = pygame.transform.scale(self.sprite, self.size)
         self.onGround = False
         self.renderMode = 0
+    def testPoint(self, pos):
+        for obj in self.appRef.objects:
+            x1 = obj.position[0]
+            x2 = obj.position[0] + obj.size[0] 
+            y1 = obj.position[1]
+            y2 = obj.position[1] + obj.size[1]
+            if (pos[0] > x1 and pos[0] < x2):
+                if (pos[1] > y1 and pos[1] < y2):
+                    return True
+        return False
     def move(self, pos):
         # transform input move vector into character move vector
         x, y = pos[0] * self.runSpeed, 0 if pos[1] < 0 else pos[1] * self.jumpSpeed
@@ -40,12 +50,23 @@ class Player:
             y2 = obj.position[1] + obj.size[1]
             if (newpos[0] > x1 and newpos[0] < x2):
                 if (newpos[1] > y1 and newpos[1] < y2):
-                    x = abs(((newpos[0] - x1) + (newpos[0] - x2)) / (self.size[0] + obj.size[0]))
+                    xx = ((newpos[0] - x1) + (newpos[0] - x2)) / (self.size[0] + obj.size[0])
+                    x = abs(xx)
                     yy = ((newpos[1] - y1) + (newpos[1] - y2)) / (self.size[1] + obj.size[1])
                     y = abs(yy)
                     if (x > y):
-                        newpos = self.position[0], newpos[1]
-                        self.velocity = 0, self.velocity[1]
+                        # walk up stairs
+                        testpos = newpos[0], newpos[1]
+                        if (xx < 0):
+                            testpos = testpos[0] + self.size[0] + 1, testpos[1]
+                        else:
+                            testpos = testpos[0] - 1, testpos[1]
+                        testpos2 = testpos[0], testpos[1] + self.size[1]/4
+                        if (self.testPoint(testpos) and not self.testPoint(testpos2)):
+                            newpos = newpos[0], testpos2[1]
+                        else:
+                            newpos = self.position[0], newpos[1]
+                            self.velocity = 0, self.velocity[1]
                     else:
                         newpos = newpos[0], self.position[1]
                         self.velocity = self.velocity[0], 0
