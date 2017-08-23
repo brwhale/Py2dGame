@@ -39,6 +39,8 @@ class App(events.CEvent):
     def on_loop(self):
         """game logic here"""
         self.player.move(self.getInputMove())
+        for obj in self.objects:
+            obj.update()
     def on_resize(self,event):
         self.resize(event.w, event.h)
     def resize(self, x, y):

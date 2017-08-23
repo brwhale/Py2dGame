@@ -1,10 +1,12 @@
 import gameObject
+import movingPlatform
 
 class Levels:
     def __init__(self, appRef):
         self.appRef = appRef
+
     def level1(self):
-        return [gameObject.Object(self.appRef, 400, 0),
+        return [movingPlatform.MovingPlatform(self.appRef, 400, 0, vertical = True),
             gameObject.Object(self.appRef, 500, 100, 100,20),
             gameObject.Object(self.appRef, 600, 120, 100,20),
             gameObject.Object(self.appRef, 700, 140, 100,20),
@@ -34,7 +36,7 @@ class Levels:
             gameObject.Object(self.appRef, 2700, 420, 100,20),
             gameObject.Object(self.appRef, 2600, 440, 100,20),
             gameObject.Object(self.appRef, 2500, 460, 100,20),
-            gameObject.Object(self.appRef, 800, 0),
+            movingPlatform.MovingPlatform(self.appRef, 800, 0),
             gameObject.Object(self.appRef, 1200, -30),
             gameObject.Object(self.appRef, 700, 500, 600, 40),
             gameObject.Object(self.appRef, 0, 0, 4, 720),

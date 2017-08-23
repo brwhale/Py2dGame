@@ -10,6 +10,12 @@ class Object:
         self.position = (x, y)
         self.sprite = pygame.image.load("tex/object.jpg").convert()
         self.sprite = pygame.transform.scale(self.sprite, self.size)
+
+    def update(self):
+        """method to override for game actions"""
+        pass
+
     def render(self):
+        """render method"""
         x, y = self.position
         self.appRef.draw_surface.blit(self.sprite, (x - self.appRef.offset[0], (self.appRef.drawSize[1] - self.size[1])-(y - self.appRef.offset[1])))

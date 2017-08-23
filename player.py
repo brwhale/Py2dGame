@@ -15,8 +15,10 @@ class Player:
         self.sprite = pygame.transform.scale(self.sprite, self.size)
         self.onGround = False
         self.renderMode = 0
+
     def reset(self):
         self.position = self.originalPosition
+
     def testPoint(self, pos):
         for obj in self.appRef.objects:
             x1 = obj.position[0]
@@ -27,13 +29,12 @@ class Player:
                 if pos[1] > y1 and pos[1] < y2:
                     return True
         return False
+
     def move(self, pos):
         # transform input move vector into character move vector
         x, y = pos[0] * self.runSpeed, 0 if pos[1] < 0 else pos[1] * self.jumpSpeed
-        # velocity: add drag if on ground, else add gravity
-        if self.onGround:
-            self.velocity = self.velocity[0] * 0.9, self.velocity[1]
-        else:
+        # add gravity
+        if not self.onGround:
             self.velocity = self.velocity[0], self.velocity[1] - 0.98
             # mid air controls
             x = x * self.runSpeed
@@ -41,7 +42,6 @@ class Player:
         # calculate new position from velocity
         x += self.velocity[0]
         y += self.velocity[1]
-
         self.velocity = x, y
         newpos = (x + self.position[0], y + self.position[1])
         # calculate colisions from new position
@@ -77,13 +77,13 @@ class Player:
                             newpos = newpos[0], self.position[1] + (y2 - self.position[1])*self.kneeRatio
                         else:
                             # too high! we are gonna smack it
-                            newpos = self.position[0], newpos[1]
-                            self.velocity = 0, self.velocity[1]
+                            # take object's x velocity so it can push us
+                            newpos = self.position[0] + obj.velocity[0], newpos[1]
                     else:
                         # hit from top or bottom                     
                         if yy >= 0:
                             # landed on something
-                            self.velocity = self.velocity[0], 0
+                            self.velocity = self.velocity[0] * 0.9 + obj.velocity[0] * 0.1, 0
                             newpos = newpos[0], y2
                             self.onGround = True
                         else:
@@ -91,6 +91,7 @@ class Player:
                             newpos = newpos[0], self.position[1]
                             if self.velocity[1] > 0:
                                 self.velocity = self.velocity[0], 0
+
         # update position taking everyhting into account
         self.position = newpos
         # update screen offset
@@ -106,6 +107,7 @@ class Player:
             self.appRef.offset = self.appRef.offset[0], self.appRef.offset[1] + (self.position[1] - boundMinY)
         elif (self.position[1] > boundMaxY):
             self.appRef.offset = self.appRef.offset[0], self.appRef.offset[1] + (self.position[1] - boundMaxY)
+    
     def render(self):
         x, y = self.position
         self.appRef.draw_surface.blit(self.sprite, (x - self.appRef.offset[0], (self.appRef.drawSize[1] - self.size[1])-(y - self.appRef.offset[1])), None, self.renderMode)

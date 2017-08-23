@@ -2,6 +2,7 @@ import pygame
 from pygame.locals import *
 
 class CEvent:
+    outputUnknowns = False
     upkey = 273
     downkey = 274
     rightkey = 275
@@ -19,6 +20,7 @@ class CEvent:
     left = False
     r = False
     q = False
+
     def getInputMove(self):
         x = 0
         y = 0
@@ -31,12 +33,15 @@ class CEvent:
         if CEvent.left:
             x -= 1
         return (x, y)
+
     def __init__(self, appRef):
         self.appRef = appRef
+
     def on_input_focus(self):
         pass
     def on_input_blur(self):
         pass
+
     def on_key_down_up(self, event, isdown):
         if event.key == CEvent.upkey or event.key == CEvent.wkey or event.key == CEvent.spacekey:
             CEvent.up = isdown
@@ -54,8 +59,9 @@ class CEvent:
         elif event.key == CEvent.qkey:
             if isdown and pygame.key.get_mods() & pygame.KMOD_META:
                 self.appRef.on_exit()
-        else:
+        elif CEvent.outputUnknowns:
             print("pressed ", event.key)
+
     def on_mouse_focus(self):
         pass
     def on_mouse_blur(self):
@@ -98,6 +104,7 @@ class CEvent:
         pass
     def on_joy_ball(self,event):
         pass
+        
     def on_event(self, event):
         if event.type == QUIT:
             self.on_exit()
