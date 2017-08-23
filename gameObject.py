@@ -1,14 +1,19 @@
 """object controls and stuff"""
 import pygame
 
-class Object:
+class Object(object):
     """see top"""
-    def __init__(self, appRef, x = 0, y = 0, xsize = 100, ysize = 100):
-        self.appRef = appRef
+    def __init__(self, x = 0, y = 0, xsize = 100, ysize = 100, spriteName = "tex/object.jpg"):
+        self.appRef = None
         self.size = xsize, ysize
         self.velocity = 0, 0
         self.position = (x, y)
-        self.sprite = pygame.image.load("tex/object.jpg").convert()
+        self.sprite = None
+        self.spriteName = spriteName
+
+    def init(self, appRef):
+        self.appRef = appRef
+        self.sprite = pygame.image.load(self.spriteName).convert()
         self.sprite = pygame.transform.scale(self.sprite, self.size)
 
     def update(self):

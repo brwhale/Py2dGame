@@ -1,17 +1,19 @@
 import gameObject
 
 class MovingPlatform(gameObject.Object):
-    def __init__(self, appRef, x = 0, y = 0, xsize = 100, ysize = 100, vertical = False):
+    def __init__(self, x = 0, y = 0, xsize = 100, ysize = 100, vertical = False, maxDistance = 500, speed = 1):
         self.distance = 0
-        self.maxDistance = 500
+        self.maxDistance = maxDistance
         self.reverse = False
+        self.speed = speed
         self.vertical = vertical
-        gameObject.Object.__init__(self, appRef, x, y, xsize, ysize)
-        
+        gameObject.Object.__init__(self, x, y, xsize, ysize)
+
     def update(self):
-        addAmt = 1
         if self.reverse:
-            addAmt = -1
+            addAmt = -self.speed
+        else:
+            addAmt = self.speed
         self.distance += addAmt
 
         if self.vertical:

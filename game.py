@@ -1,11 +1,14 @@
 """Simple 2d game thing in python"""
 import pygame
+import jsonpickle
 # pylint: disable=W0614
 # pylint: disable=W0401
 from pygame.locals import *
 import events
 import player
 import gameLevels
+import gameObject
+import movingPlatform
 
 class App(events.CEvent):
     """main class for game"""
@@ -35,7 +38,18 @@ class App(events.CEvent):
         self._running = True
         self.clock = pygame.time.Clock()
         self.player = player.Player(self, 100, 20)
-        self.objects = self.levels.level1()
+        mapFile = "levels/level1.json"
+        try:
+            with open(mapFile, 'r') as savefile:
+                self.objects = jsonpickle.decode(savefile.read())
+                for obj in self.objects:
+                    obj.init(self)
+        except:
+            self.objects = self.levels.level1()
+            with open(mapFile, 'w') as outfile:    
+                outfile.write(jsonpickle.encode(self.objects))
+            for obj in self.objects:
+                obj.init(self)
     def on_loop(self):
         """game logic here"""
         self.player.move(self.getInputMove())
