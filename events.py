@@ -6,16 +6,19 @@ class CEvent:
     downkey = 274
     rightkey = 275
     leftkey = 276
+    spacekey = 32
     wkey = 119
     akey = 97
     skey = 115
     dkey = 100
     rkey = 114
+    qkey = 113
     up = False
     down = False
     right = False
     left = False
     r = False
+    q = False
     def getInputMove(self):
         x = 0
         y = 0
@@ -35,7 +38,7 @@ class CEvent:
     def on_input_blur(self):
         pass
     def on_key_down_up(self, event, isdown):
-        if event.key == CEvent.upkey or event.key == CEvent.wkey:
+        if event.key == CEvent.upkey or event.key == CEvent.wkey or event.key == CEvent.spacekey:
             CEvent.up = isdown
         elif event.key == CEvent.downkey or event.key == CEvent.skey:
             CEvent.down = isdown
@@ -48,6 +51,11 @@ class CEvent:
                 if not CEvent.r:
                     self.appRef.reset()
             CEvent.r = isdown
+        elif event.key == CEvent.qkey:
+            if isdown and pygame.key.get_mods() & pygame.KMOD_META:
+                self.appRef.on_exit()
+        else:
+            print("pressed ", event.key)
     def on_mouse_focus(self):
         pass
     def on_mouse_blur(self):

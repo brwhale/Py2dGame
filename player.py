@@ -74,7 +74,6 @@ class Player:
                         testpos2 = testpos[0], testpos[1] + self.size[1]*self.kneeRatio
                         if self.testPoint(testpos) and not self.testPoint(testpos2):
                             # climbing!
-                            self.velocity = self.velocity[0], 0
                             newpos = newpos[0], self.position[1] + (y2 - self.position[1])*self.kneeRatio
                         else:
                             # too high! we are gonna smack it
@@ -96,9 +95,9 @@ class Player:
         self.position = newpos
         # update screen offset
         boundMinX = self.appRef.offset[0] + self.appRef.padding*2
-        boundMaxX = self.appRef.offset[0] + self.appRef.size[0] - self.appRef.padding*2 - self.size[0]
+        boundMaxX = self.appRef.offset[0] + self.appRef.drawSize[0] - self.appRef.padding*2 - self.size[0]
         boundMinY = self.appRef.offset[1] + self.appRef.padding
-        boundMaxY = self.appRef.offset[1] + self.appRef.size[1] - self.appRef.padding - self.size[1]
+        boundMaxY = self.appRef.offset[1] + self.appRef.drawSize[1] - self.appRef.padding - self.size[1]
         if (self.position[0] < boundMinX):
             self.appRef.offset = self.appRef.offset[0] + (self.position[0] - boundMinX), self.appRef.offset[1]
         elif (self.position[0] > boundMaxX):
@@ -109,4 +108,4 @@ class Player:
             self.appRef.offset = self.appRef.offset[0], self.appRef.offset[1] + (self.position[1] - boundMaxY)
     def render(self):
         x, y = self.position
-        self.appRef.display_surface.blit(self.sprite, (x - self.appRef.offset[0], (self.appRef.size[1] - self.size[1])-(y - self.appRef.offset[1])), None, self.renderMode)
+        self.appRef.draw_surface.blit(self.sprite, (x - self.appRef.offset[0], (self.appRef.drawSize[1] - self.size[1])-(y - self.appRef.offset[1])), None, self.renderMode)
