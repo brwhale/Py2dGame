@@ -20,6 +20,7 @@ class App(events.CEvent):
         self.draw_surface = None
         self.size = None, None
         self.printFPS = False
+        self.paused = False
         self.ui = None
         self.drawSize = 1920, 1080
         self.inverseAspectRatio = self.drawSize[1] / self.drawSize[0]
@@ -62,10 +63,12 @@ class App(events.CEvent):
 
     def on_loop(self):
         """game logic here"""
-        self.player.move(self.getInputMove())
-        for obj in self.objects:
-            obj.update()
-
+        if not self.paused:
+            self.player.move(self.getInputMove())
+            for obj in self.objects:
+                obj.update()
+        else:
+            self.ui.menu[-1].update()
     def on_resize(self,event):
         self.resize(event.w, event.h)
 
