@@ -5,7 +5,7 @@ class Player:
     """see top"""
     def __init__(self, appRef, x = 0, y = 0):
         self.appRef = appRef
-        self.size = 50, 100
+        self.size = 60, 100
         self.jumpSpeed = 24.1
         self.runSpeed = 0.7
         self.velocity = 0, 0

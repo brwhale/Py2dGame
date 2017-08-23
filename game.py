@@ -19,7 +19,7 @@ class App(events.CEvent):
         self.draw_surface = None
         self.size = None, None
         self.printFPS = False
-        self.drawSize = 1280, 720
+        self.drawSize = 1920, 1080
         self.inverseAspectRatio = self.drawSize[1] / self.drawSize[0]
         self.padding = None
         self.fpsUpdateCounter = 0
