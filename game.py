@@ -40,7 +40,7 @@ class App(events.CEvent):
         pygame.init()
         pygame.display.set_caption("snek 2d 0.1")
         self.draw_surface = pygame.Surface(self.drawSize)
-        self.resize(640, 400)
+        self.resize(1280, 720)
         self._running = True
         self.clock = pygame.time.Clock()
         self.ui = ui.UI(self)
@@ -54,7 +54,7 @@ class App(events.CEvent):
                 for obj in self.objects:
                     obj.init(self)
         except:
-            self.objects = self.levels.level1()
+            self.objects = self.levels.level2()
             if self.saveLevels:
                 with open(mapFile, 'w') as outfile:    
                     outfile.write(jsonpickle.encode(self.objects))
@@ -65,6 +65,19 @@ class App(events.CEvent):
         """game logic here"""
         if not self.paused:
             self.player.move(self.getInputMove())
+            # update screen offset
+            boundMinX = self.offset[0] + self.padding*2
+            boundMaxX = self.offset[0] + self.drawSize[0] - self.padding*2 - self.player.size[0]
+            boundMinY = self.offset[1] + self.padding
+            boundMaxY = self.offset[1] + self.drawSize[1] - self.padding - self.player.size[1]
+            if (self.player.position[0] < boundMinX):
+                self.offset = self.offset[0] + (self.player.position[0] - boundMinX), self.offset[1]
+            elif (self.player.position[0] > boundMaxX):
+                self.offset = self.offset[0] + (self.player.position[0] - boundMaxX), self.offset[1]
+            if (self.player.position[1] < boundMinY):
+                self.offset = self.offset[0], self.offset[1] + (self.player.position[1] - boundMinY)
+            elif (self.player.position[1] > boundMaxY):
+                self.offset = self.offset[0], self.offset[1] + (self.player.position[1] - boundMaxY)
             for obj in self.objects:
                 obj.update()
         else:

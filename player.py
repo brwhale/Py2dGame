@@ -3,14 +3,15 @@ import pygame
 
 class Player:
     """see top"""
-    def __init__(self, appRef, x = 0, y = 0):
+    def __init__(self, appRef, x = 0, y = 0, w = 60, h = 100):
         self.appRef = appRef
-        self.size = 60, 100
+        self.size = w, h
         self.jumpSpeed = 24.1
         self.runSpeed = 0.7
         self.velocity = 0, 0
         self.kneeRatio = 0.25
         self.health = 100
+        self.player = True
         self.position = x, y
         self.originalPosition = x, y
         self.sprite = pygame.image.load("tex/glider.jpg").convert()
@@ -37,6 +38,8 @@ class Player:
     def move(self, pos):
         # transform input move vector into character move vector
         x, y = pos[0] * self.runSpeed, 0 if pos[1] < 0 else pos[1] * self.jumpSpeed
+        if pos[1] < 0:
+            self.appRef.offset = self.appRef.offset[0], self.appRef.offset[1] + pos[1]
         # add gravity
         if not self.onGround:
             self.velocity = self.velocity[0], self.velocity[1] - 0.98
@@ -51,6 +54,8 @@ class Player:
         # calculate colisions from new position
         self.onGround = False
         for obj in self.appRef.objects:
+            if obj == self:
+                break
             # get boundries
             x1 = obj.position[0] - self.size[0]
             x2 = obj.position[0] + obj.size[0] 
@@ -60,7 +65,8 @@ class Player:
                 if newpos[1] > y1 and newpos[1] < y2:
                     # collsion
                     # modify health if needed (negative damage heals you)
-                    self.health -= obj.contactDamage
+                    if (self.player):
+                        self.health -= obj.contactDamage
                     # get collision direction
                     xx = ((self.position[0] - x1) + (self.position[0] - x2)) / (self.size[0] + obj.size[0])
                     absx = abs(xx)
@@ -103,19 +109,6 @@ class Player:
             return
         # update position taking everyhting into account
         self.position = newpos
-        # update screen offset
-        boundMinX = self.appRef.offset[0] + self.appRef.padding*2
-        boundMaxX = self.appRef.offset[0] + self.appRef.drawSize[0] - self.appRef.padding*2 - self.size[0]
-        boundMinY = self.appRef.offset[1] + self.appRef.padding
-        boundMaxY = self.appRef.offset[1] + self.appRef.drawSize[1] - self.appRef.padding - self.size[1]
-        if (self.position[0] < boundMinX):
-            self.appRef.offset = self.appRef.offset[0] + (self.position[0] - boundMinX), self.appRef.offset[1]
-        elif (self.position[0] > boundMaxX):
-            self.appRef.offset = self.appRef.offset[0] + (self.position[0] - boundMaxX), self.appRef.offset[1]
-        if (self.position[1] < boundMinY):
-            self.appRef.offset = self.appRef.offset[0], self.appRef.offset[1] + (self.position[1] - boundMinY)
-        elif (self.position[1] > boundMaxY):
-            self.appRef.offset = self.appRef.offset[0], self.appRef.offset[1] + (self.position[1] - boundMaxY)
     
     def render(self):
         x, y = self.position

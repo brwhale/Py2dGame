@@ -11,6 +11,7 @@ class Object(object):
         self.sprite = None
         self.spriteName = spriteName
         self.contactDamage = contactDamage
+        self.sentient = False
 
     def init(self, appRef):
         self.appRef = appRef

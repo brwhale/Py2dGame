@@ -1,9 +1,18 @@
 import gameObject
 import movingPlatform
+import npc
 
 class Levels:
     def __init__(self, appRef):
         self.appRef = appRef
+        
+    def level2(self):
+        return [gameObject.Object(-100,-100,400),
+            gameObject.Object(200,-100,100,140),
+            gameObject.Object(300,-100,800),
+            gameObject.Object(1100,-100,100,600),
+            npc.NPC(500,40),
+            npc.NPC(700,40, active = False)]
 
     def level1(self):
         return [movingPlatform.MovingPlatform(400, 0, vertical = True),
