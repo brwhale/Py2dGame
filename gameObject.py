@@ -3,17 +3,18 @@ import pygame
 
 class Object(object):
     """see top"""
-    def __init__(self, x = 0, y = 0, xsize = 100, ysize = 100, spriteName = "tex/object.jpg"):
+    def __init__(self, x = 0, y = 0, xsize = 100, ysize = 100, spriteName = "tex/object.jpg", contactDamage = 0):
         self.appRef = None
         self.size = xsize, ysize
         self.velocity = 0, 0
         self.position = (x, y)
         self.sprite = None
         self.spriteName = spriteName
+        self.contactDamage = contactDamage
 
     def init(self, appRef):
         self.appRef = appRef
-        self.sprite = pygame.image.load(self.spriteName).convert()
+        self.sprite = pygame.image.load(self.spriteName)
         self.sprite = pygame.transform.scale(self.sprite, self.size)
 
     def update(self):

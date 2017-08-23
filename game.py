@@ -9,6 +9,7 @@ import player
 import gameLevels
 import gameObject
 import movingPlatform
+import ui
 
 class App(events.CEvent):
     """main class for game"""
@@ -19,17 +20,21 @@ class App(events.CEvent):
         self.draw_surface = None
         self.size = None, None
         self.printFPS = False
+        self.ui = None
         self.drawSize = 1920, 1080
         self.inverseAspectRatio = self.drawSize[1] / self.drawSize[0]
         self.padding = None
         self.fpsUpdateCounter = 0
         self.offset = 0, 0
         self.levels = gameLevels.Levels(self)
+        self.saveLevels = False
         self.clock = None
         events.CEvent.__init__(self, self)
+
     def on_init(self):
         """game init"""
         # pylint: disable=E1101
+        # pylint: disable=E1121
         # pylint: disable=W0201
         pygame.init()
         pygame.display.set_caption("snek 2d 0.1")
@@ -37,8 +42,11 @@ class App(events.CEvent):
         self.resize(640, 400)
         self._running = True
         self.clock = pygame.time.Clock()
+        self.ui = ui.UI(self)
         self.player = player.Player(self, 100, 20)
-        mapFile = "levels/level1.json"
+        self.loadMap("levels/level1.json")
+        
+    def loadMap(self, mapFile):
         try:
             with open(mapFile, 'r') as savefile:
                 self.objects = jsonpickle.decode(savefile.read())
@@ -46,32 +54,43 @@ class App(events.CEvent):
                     obj.init(self)
         except:
             self.objects = self.levels.level1()
-            with open(mapFile, 'w') as outfile:    
-                outfile.write(jsonpickle.encode(self.objects))
+            if self.saveLevels:
+                with open(mapFile, 'w') as outfile:    
+                    outfile.write(jsonpickle.encode(self.objects))
             for obj in self.objects:
                 obj.init(self)
+
     def on_loop(self):
         """game logic here"""
         self.player.move(self.getInputMove())
         for obj in self.objects:
             obj.update()
+
     def on_resize(self,event):
         self.resize(event.w, event.h)
+
     def resize(self, x, y):
         """resize the window"""
         # pylint: disable=E1101
         self.size = x, int(x * self.inverseAspectRatio)
         self.padding = (self.size[0] + self.size[1])/14.0
         self.display_surface = pygame.display.set_mode(self.size, pygame.HWSURFACE | pygame.DOUBLEBUF | pygame.RESIZABLE)
+
     def reset(self):
         """reset the player"""
+        self.offset = 0, 0
         self.player.reset()
+        self.loadMap("levels/level1.json")
+
     def on_render(self):
         """render stuff here"""
-        self.draw_surface.fill((30,20,10))        
+        self.draw_surface.fill((20,20,20))        
         for obj in self.objects:
             obj.render()
         self.player.render()
+        # ui
+        self.ui.render()
+
         pygame.transform.scale(self.draw_surface.convert_alpha(), self.size, self.display_surface)
         pygame.display.flip()
         self.clock.tick_busy_loop(60)
@@ -81,12 +100,15 @@ class App(events.CEvent):
             else:
                 self.fpsUpdateCounter = 0
                 print(self.clock.get_fps())
+
     def on_cleanup(self):
         """quittin time"""
         # pylint: disable=E1101
         pygame.quit()
+
     def on_exit(self):
         self._running = False
+
     def on_execute(self):
         """start the main loop"""
         # pylint: disable=C0121

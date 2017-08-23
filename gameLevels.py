@@ -7,7 +7,10 @@ class Levels:
 
     def level1(self):
         return [movingPlatform.MovingPlatform(400, 0, vertical = True),
-            movingPlatform.MovingPlatform(400, 400, 500, 20, vertical = False),
+            gameObject.Object(400, 0, spriteName = "tex/spikes.png", contactDamage = 1),
+            gameObject.Object(600, 10, spriteName = "tex/spikes.png", contactDamage = -1),
+            gameObject.Object(900, 100, spriteName = "tex/spikes.png", contactDamage = 14561),
+            movingPlatform.MovingPlatform(400, 400, 500, 20, vertical = False, maxDistance = 5000, speed = 3),
             gameObject.Object(600, 120, 100,20),
             gameObject.Object(700, 140, 100,20),
             gameObject.Object(800, 160, 100,20),

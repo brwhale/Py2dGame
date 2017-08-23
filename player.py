@@ -10,7 +10,9 @@ class Player:
         self.runSpeed = 0.7
         self.velocity = 0, 0
         self.kneeRatio = 0.25
-        self.position = self.originalPosition = (x, y)
+        self.health = 100
+        self.position = x, y
+        self.originalPosition = x, y
         self.sprite = pygame.image.load("tex/glider.jpg").convert()
         self.sprite = pygame.transform.scale(self.sprite, self.size)
         self.onGround = False
@@ -18,6 +20,8 @@ class Player:
 
     def reset(self):
         self.position = self.originalPosition
+        self.velocity = 0, 0
+        self.health = 100
 
     def testPoint(self, pos):
         for obj in self.appRef.objects:
@@ -55,6 +59,8 @@ class Player:
             if newpos[0] > x1 and newpos[0] < x2:
                 if newpos[1] > y1 and newpos[1] < y2:
                     # collsion
+                    # modify health if needed (negative damage heals you)
+                    self.health -= obj.contactDamage
                     # get collision direction
                     xx = ((self.position[0] - x1) + (self.position[0] - x2)) / (self.size[0] + obj.size[0])
                     absx = abs(xx)
@@ -91,7 +97,10 @@ class Player:
                             newpos = newpos[0], self.position[1]
                             if self.velocity[1] > 0:
                                 self.velocity = self.velocity[0], 0
-
+        # we might have taken enough collision damage to die, better check
+        if self.health < 0:
+            self.appRef.reset()
+            return
         # update position taking everyhting into account
         self.position = newpos
         # update screen offset
