@@ -81,7 +81,7 @@ class App(events.CEvent):
             for obj in self.objects:
                 obj.update()
         else:
-            self.ui.menu[-1].update()
+            self.ui.menu.update(None, None)
     def on_resize(self,event):
         self.resize(event.w, event.h)
 
