@@ -20,8 +20,6 @@ class UI:
             # draw pause menu
             self.menu.render()
     # basic button triggers that will be shared by a lot of controls
-    def triggerBack(self):
-        del self.menu[-1]
     def triggerNone(self):
         print("clicked something")
     def triggerMsg(self):
@@ -95,8 +93,9 @@ class Button(Control):
 
 class UIView:
     """base class for menus and views, based on ios"""
-    def __init__(self, appRef, ui, position, size, fontSize = 106):
+    def __init__(self, appRef, ui, position, size, fontSize = 106, parent = None):
         self.appRef = appRef
+        self.parent = parent
         self.ui = ui
         self.fontSize = fontSize
         self.bigFont = pygame.font.Font("font/FiraCode-Retina.ttf", fontSize)
@@ -106,6 +105,9 @@ class UIView:
         self.w, self.h = size
         self.x, self.y = position
         self.subViews = []
+
+    def removeFromParent(self):
+        self.parent.subViews.remove(self)
 
     def addSubView(self, sub):
         """add a sub view to the stack"""
@@ -165,14 +167,17 @@ class MainMenu(Menu):
 
     def triggerSettings(self):
         """show settings"""
-        view = UIView(self.appRef, self.ui, (500, 100), (400, 800))
-        view.addControl(Button("test1", (20, 400), (200, 100), (123,123,200), self.ui.triggerNone, bgColor = (0,0,0)))
-        view.addControl(Button("test3", (20, 600), (200, 100), (123,123,200), self.triggerSettings2, bgColor = (0,0,0)))
-        self.addSubView(view)
+        self.view = UIView(self.appRef, self.ui, (500, 100), (400, 800), parent = self)
+        self.view.addControl(Button("test1", (20, 200), (200, 100), (123,123,200), self.ui.triggerNone, bgColor = (0,0,0)))
+        self.view.addControl(Button("test3", (20, 400), (200, 100), (123,123,200), self.triggerSettings2, bgColor = (0,0,0)))
+        self.view.addControl(Button("back", (20, 600), (300, 100), (123,123,200), self.view.removeFromParent, bgColor = (0,0,0)))
+        self.addSubView(self.view)
 
     def triggerSettings2(self):
         """show settings"""
-        view = UIView(self.appRef, self.ui, (500, 100), (400, 800))
-        view.addControl(Button("test2", (20, 400), (200, 100), (123,123,200), self.ui.triggerMsg, bgColor = (0,0,0)))
-        view.addControl(Button("test4", (20, 600), (200, 100), (123,123,200), self.triggerSettings2, bgColor = (0,0,0)))
-        self.subViews[-1].addSubView(view)
+        view = UIView(self.appRef, self.ui, (self.view.x + 20, 100), (400, 800), parent = self.view)
+        view.addControl(Button("test2", (20, 200), (200, 100), (123,123,200), self.ui.triggerMsg, bgColor = (0,0,0)))
+        view.addControl(Button("test4", (20, 400), (200, 100), (123,123,200), self.triggerSettings2, bgColor = (0,0,0)))
+        view.addControl(Button("back", (20, 600), (300, 100), (123,123,200), view.removeFromParent, bgColor = (0,0,0)))
+        self.view.addSubView(view)
+        self.view = view
