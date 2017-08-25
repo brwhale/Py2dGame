@@ -65,6 +65,7 @@ class App(events.CEvent):
         """game logic here"""
         if not self.paused:
             self.player.move(self.getInputMove())
+            self.player.update()
             # update screen offset
             boundMinX = self.offset[0] + self.padding*2
             boundMaxX = self.offset[0] + self.drawSize[0] - self.padding*2 - self.player.size[0]
@@ -81,7 +82,11 @@ class App(events.CEvent):
             for obj in self.objects:
                 obj.update()
         else:
-            self.ui.menu.update(None, None)
+            self.ui.update()
+        if self.player.invWindowOpen:
+            self.ui.characterMenu.update()
+    def keyboardTestFunction(self):
+        self.player.experience += 9
     def on_resize(self,event):
         self.resize(event.w, event.h)
 

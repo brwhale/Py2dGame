@@ -8,14 +8,15 @@ class Levels:
 
     def level2(self):
         return [gameObject.Object(-100,-100,400),
-            gameObject.Object(200,-100,100,140),
+            gameObject.Object(200,-100,100,150),
             gameObject.Object(300,-100,100,120),
-            gameObject.Object(300,-100,50,130),
+            movingPlatform.MovingPlatform(300,-100,50,130),
+            movingPlatform.MovingPlatform(600,-100,50,100, True, 100, 7),
             gameObject.Object(400,-100,50,110),
             gameObject.Object(300,-100,800),
             gameObject.Object(1100,-100,100,600),
             npc.NPC(500,40),
-            npc.NPC(700,40, active = False)]
+            npc.NPC(700,40, active = True)]
 
     def level1(self):
         return [movingPlatform.MovingPlatform(400, 0, vertical = True),

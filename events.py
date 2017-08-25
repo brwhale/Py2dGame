@@ -15,6 +15,8 @@ class CEvent:
     dkey = 100
     rkey = 114
     qkey = 113
+    ekey = 101
+    lkey = 108
     up = False
     down = False
     right = False
@@ -59,6 +61,12 @@ class CEvent:
         elif event.key == CEvent.esckey:
             if isdown:
                 self.appRef.paused = not self.appRef.paused
+        elif event.key == CEvent.lkey:
+            if isdown:
+                self.appRef.keyboardTestFunction()
+        elif event.key == CEvent.ekey:
+            if isdown:
+                self.appRef.player.invWindowOpen = not self.appRef.player.invWindowOpen
         elif CEvent.outputUnknowns:
             print("pressed ", event.key)
 

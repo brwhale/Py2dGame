@@ -17,7 +17,20 @@ class Player:
         self.sprite = pygame.image.load("tex/glider.jpg").convert()
         self.sprite = pygame.transform.scale(self.sprite, self.size)
         self.onGround = False
+        self.inventory = []
+        self.invWindowOpen = False
         self.renderMode = 0
+        self.level = 1
+        self.experience = 0
+        self.experienceToLevel = 100
+        self.experienceTotal = 0
+        self.strength = 10
+        self.dexterity = 10
+        self.constitution = 10
+        self.intelligence = 10
+        self.wisdom = 10
+        self.perception = 10
+        self.unusedStatPoints = 0
 
     def reset(self):
         self.position = self.originalPosition
@@ -89,8 +102,11 @@ class Player:
                             newpos = newpos[0], self.position[1] + (y2 - self.position[1])*self.kneeRatio
                         else:
                             # too high! we are gonna smack it
-                            # take object's x velocity so it can push us
-                            newpos = self.position[0] + obj.velocity[0], newpos[1]
+                            # take object's x velocity so it can push us, only if it's moving towards us
+                            if obj.position[0] > self.position[0] == obj.velocity[0] < 0:
+                                newpos = self.position[0] + obj.velocity[0], newpos[1]
+                            else:
+                                newpos = self.position[0], newpos[1]
                     else:
                         # hit from top or bottom                     
                         if yy >= 0:
@@ -103,13 +119,20 @@ class Player:
                             newpos = newpos[0], self.position[1]
                             if self.velocity[1] > 0:
                                 self.velocity = self.velocity[0], 0
+        # update position taking everyhting into account
+        self.position = newpos
+    def update(self):
         # we might have taken enough collision damage to die, better check
         if self.health < 0:
             self.appRef.reset()
             return
-        # update position taking everyhting into account
-        self.position = newpos
-    
+        if self.experience >= self.experienceToLevel:
+            self.experienceTotal += self.experienceToLevel
+            self.experience -= self.experienceToLevel
+            self.experienceToLevel *= 1.6
+            self.level += 1
+            self.unusedStatPoints += 1
+
     def render(self):
         x, y = self.position
         self.appRef.draw_surface.blit(self.sprite, (x - self.appRef.offset[0], (self.appRef.drawSize[1] - self.size[1])-(y - self.appRef.offset[1])), None, self.renderMode)
