@@ -88,13 +88,15 @@ class Player:
                     if (absx > absy):
                         # hit from side, check for stair climb
                         # foot position
-                        testpos = newpos[0], newpos[1] + 1
+                        testpos = newpos[0], newpos[1] + 1                        
                         if xx < 0:
                             # right side
                             testpos = testpos[0] + self.size[0] + 1, testpos[1]
+                            blockEdge = obj.position[0] - self.size[0]
                         else:
                             # left side
                             testpos = testpos[0] - 1, testpos[1]
+                            blockEdge = obj.position[0] + obj.size[0]
                         # knee positon
                         testpos2 = testpos[0], testpos[1] + self.size[1]*self.kneeRatio
                         if self.testPoint(testpos) and not self.testPoint(testpos2):
@@ -104,9 +106,9 @@ class Player:
                             # too high! we are gonna smack it
                             # take object's x velocity so it can push us, only if it's moving towards us
                             if obj.position[0] > self.position[0] == obj.velocity[0] < 0:
-                                newpos = self.position[0] + obj.velocity[0], newpos[1]
+                                newpos = blockEdge + obj.velocity[0], newpos[1]
                             else:
-                                newpos = self.position[0], newpos[1]
+                                newpos = blockEdge, newpos[1]
                     else:
                         # hit from top or bottom                     
                         if yy >= 0:

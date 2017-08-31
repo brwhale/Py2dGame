@@ -2,6 +2,7 @@ import pygame
 from pygame.locals import *
 
 class CEvent:
+    # pylint: disable=E1101
     outputUnknowns = True
     upkey = 273
     downkey = 274
@@ -17,6 +18,7 @@ class CEvent:
     qkey = 113
     ekey = 101
     lkey = 108
+    f4key = 285
     up = False
     down = False
     right = False
@@ -57,6 +59,9 @@ class CEvent:
                 self.appRef.reset()
         elif event.key == CEvent.qkey:
             if isdown and pygame.key.get_mods() & pygame.KMOD_META:
+                self.appRef.on_exit()
+        elif event.key == CEvent.f4key:
+            if isdown and pygame.key.get_mods() & pygame.KMOD_ALT:
                 self.appRef.on_exit()
         elif event.key == CEvent.esckey:
             if isdown:

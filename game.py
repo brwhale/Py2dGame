@@ -13,12 +13,15 @@ import ui
 
 class App(events.CEvent):
     """main class for game"""
+    # pylint: disable=E1101
     def __init__(self):
         """window init"""
         self._running = True
         self.display_surface = None
         self.draw_surface = None
         self.size = None, None
+        self.oldSize = None, None
+        self.screenSize = None, None
         self.printFPS = False
         self.paused = False
         self.ui = None
@@ -30,15 +33,17 @@ class App(events.CEvent):
         self.levels = gameLevels.Levels(self)
         self.saveLevels = False
         self.clock = None
+        self.fullscreen = False
         events.CEvent.__init__(self, self)
 
     def on_init(self):
         """game init"""
-        # pylint: disable=E1101
         # pylint: disable=E1121
         # pylint: disable=W0201
         pygame.init()
         pygame.display.set_caption("snek 2d 0.1")
+        info = pygame.display.Info()
+        self.screenSize = (info.current_w, info.current_h)
         self.draw_surface = pygame.Surface(self.drawSize)
         self.resize(1280, 720)
         self._running = True
@@ -85,17 +90,30 @@ class App(events.CEvent):
             self.ui.update()
         if self.player.invWindowOpen:
             self.ui.characterMenu.update()
+
     def keyboardTestFunction(self):
         self.player.experience += 9
+
     def on_resize(self,event):
         self.resize(event.w, event.h)
 
     def resize(self, x, y):
         """resize the window"""
-        # pylint: disable=E1101
-        self.size = x, int(x * self.inverseAspectRatio)
-        self.padding = (self.size[0] + self.size[1])/14.0
-        self.display_surface = pygame.display.set_mode(self.size, pygame.HWSURFACE | pygame.DOUBLEBUF | pygame.RESIZABLE)
+        if not self.fullscreen:
+            self.size = x, int(x * self.inverseAspectRatio)
+            self.padding = (self.size[0] + self.size[1])/14.0
+            self.display_surface = pygame.display.set_mode(self.size, pygame.HWSURFACE | pygame.DOUBLEBUF | pygame.RESIZABLE)        
+
+    def toggleFullscreen(self):
+        if self.fullscreen:
+            self.fullscreen = False
+            self.resize(self.oldSize[0], self.oldSize[1])            
+        else:
+            self.fullscreen = True
+            self.oldSize = self.size
+            self.size = self.screenSize
+            self.padding = (self.size[0] + self.size[1])/14.0
+            self.display_surface = pygame.display.set_mode(self.size, pygame.HWSURFACE | pygame.DOUBLEBUF | pygame.FULLSCREEN)
 
     def reset(self):
         """reset the player"""

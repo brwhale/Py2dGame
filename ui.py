@@ -97,9 +97,6 @@ class Button(Control):
         midcol = self.color[0]*0.6, self.color[1]*0.6, self.color[2]*0.6
         midfcol = self.color[0]*0.8, self.color[1]*0.8, self.color[2]*0.8
         cols = [self.color, midfcol, midcol, midbcol]
-        #self.menuRef.appRef.draw_surface.blit(self.menuRef.bigFont.render(self.message, True, cols[int(self.counter+3)%4]), (self.position[0] + 3, self.position[1] + 3))
-        #self.menuRef.appRef.draw_surface.blit(self.menuRef.bigFont.render(self.message, True, cols[int(self.counter+2)%4]), (self.position[0] + 2, self.position[1] + 2))
-        #self.menuRef.appRef.draw_surface.blit(self.menuRef.bigFont.render(self.message, True, cols[int(self.counter+1)%4]), (self.position[0] + 1, self.position[1] + 1))
         self.menuRef.appRef.draw_surface.blit(self.font.render(self.message, True, cols[int(self.counter)%4]), (self.position[0]+self.fontSize/9,self.position[1]-self.fontSize/9))
 
 class UIView:
@@ -266,10 +263,10 @@ class MainMenu(Menu):
 
     def triggerSettings(self):
         """show settings"""
-        self.view = UIView(self.appRef, self.ui, (500, 100), (400, 800), parent = self)
-        self.view.addControl(Button("test1T1IL|^*gqQ~`", (20, 200), (1000, 100), (123,123,200), self.ui.triggerNone, bgColor = (0,0,0)))
-        self.view.addControl(Button("test3", (20, 400), (200, 100), (123,123,200), self.triggerSettings2, bgColor = (0,0,0)))
-        self.view.addControl(Button("back", (20, 600), (300, 100), (123,123,200), self.view.removeFromParent, bgColor = (0,0,0)))
+        self.view = UIView(self.appRef, self.ui, (500, 100), (740, 800), parent = self, bgColor = (100,120,120))
+        self.view.addControl(Button("Fullscreen", (50, 200), (640, 100), (123,123,200), self.appRef.toggleFullscreen, bgColor = (0,0,0)))
+        self.view.addControl(Button("test3", (50, 400), (640, 100), (123,123,200), self.triggerSettings2, bgColor = (0,0,0)))
+        self.view.addControl(Button("back", (50, 600), (640, 100), (123,123,200), self.view.removeFromParent, bgColor = (0,0,0)))
         self.addSubView(self.view)
 
     def triggerSettings2(self):
